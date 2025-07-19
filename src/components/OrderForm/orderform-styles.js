@@ -1,3 +1,25 @@
+/**
+ * OrderForm Styles
+ * 
+ * This file contains all the styled components used by the OrderForm component.
+ * It uses Material-UI's styled API to create custom-styled components with a consistent theme.
+ * 
+ * The styled components include:
+ * - FormContainer: Main container for the order form
+ * - FormHeader: Header section with title and close button
+ * - FormTitle: Styled title with icon
+ * - FormCard: Card container for form sections
+ * - FormCardContent: Content wrapper for form cards
+ * - SectionTitle: Styled section headers
+ * - FormDivider: Custom divider between form sections
+ * - SummaryContainer: Container for order summary
+ * - SummaryItem: Individual summary line items
+ * - SubmitButton: Primary action button
+ * - CloseButton: Button to close the form
+ * 
+ * Icons are imported from Material-UI and can be used throughout the styled components.
+ */
+
 import { styled } from '@mui/material/styles';
 import { Box, Typography, Button, Card, CardContent, Divider } from '@mui/material';
 import { ShoppingCart, Person, LocalShipping, Home, Notes } from '@mui/icons-material';

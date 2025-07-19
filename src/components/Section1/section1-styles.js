@@ -1,3 +1,21 @@
+/**
+ * Section1 Styles
+ * 
+ * This file contains all the styled components used by the Section1 (Hero) component.
+ * It uses Material-UI's styled API and CSS-in-JS for styling the hero section.
+ * 
+ * The styled components include:
+ * - StyledSection: Main container with responsive padding and background
+ * - Heading: Main headline with custom typography
+ * - Subheading: Descriptive text below the main heading
+ * - Grid2Col: Two-column grid layout for the hero section
+ * - GridImageBox: Container for the image grid
+ * - ContentBox: Container for the text content and CTA button
+ * 
+ * The styles use CSS custom properties (variables) for theming and responsive design.
+ * Breakpoints are defined for different screen sizes to ensure proper display on all devices.
+ */
+
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 

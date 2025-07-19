@@ -1,3 +1,20 @@
+/**
+ * Section1 Component
+ * 
+ * The hero section of the Order Management System that provides an engaging introduction
+ * to the application. It features a responsive grid of images and a call-to-action.
+ * 
+ * Features:
+ * - Responsive grid layout with product/service images
+ * - Engaging headline and subheading text
+ * - Call-to-action button to start the order process
+ * - Styled with Material-UI and custom styled-components
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.onOrderNowClick - Callback function triggered when the order button is clicked
+ * @returns {JSX.Element} The Section1 component
+ */
 import React from "react";
 import { Button, Container } from "@mui/material";
 import {

@@ -1,3 +1,21 @@
+/**
+ * OrderForm Component
+ * 
+ * A comprehensive form component for creating and managing customer orders.
+ * 
+ * Features:
+ * - Collects customer information (name, email, phone)
+ * - Product selection with quantity
+ * - Shipping address details
+ * - Order summary with real-time calculations
+ * - Form validation
+ * - Responsive layout using Material-UI Grid
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.onClose - Callback function to close the form
+ * @returns {JSX.Element} The OrderForm component
+ */
 import React, { useState } from "react";
 import { TextField, Grid, MenuItem, Typography } from "@mui/material";
 import {

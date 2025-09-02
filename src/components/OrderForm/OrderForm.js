@@ -17,6 +17,7 @@
  * @returns {JSX.Element} The OrderForm component
  */
 import React, { useState } from "react";
+import { orderApi } from "../../services/api";
 import { TextField, Grid, MenuItem, Typography } from "@mui/material";
 import {
   FormContainer,
@@ -91,15 +92,44 @@ const OrderForm = ({ onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // In a real app, you would submit the form data to your backend here
-      console.log("Form submitted:", formData);
-      // Show success message and close the form
-      alert("Order placed successfully!");
-      if (onClose) {
-        onClose();
+      try {
+        // Get the selected product details
+        const selectedProduct = products.find(p => p.id === Number(formData.productId));
+        
+        // Prepare the request payload according to the API format
+        const orderPayload = {
+          name: formData.customerName,
+          email: formData.email,
+          phoneNo: formData.phone,
+          products: [
+            {
+              name: selectedProduct.name,
+              quantity: formData.quantity
+            }
+          ],
+          streetAddress: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipcode: formData.zipCode,
+          specialInstructions: formData.specialInstructions || ""
+        };
+        
+        // Make the API call to place the order using the API service
+        const response = await orderApi.placeOrder(orderPayload);
+        
+        console.log("Order placed successfully:", response.data);
+        
+        // Show success message and close the form
+        alert("Order placed successfully!");
+        if (onClose) {
+          onClose();
+        }
+      } catch (error) {
+        console.error("Error placing order:", error);
+        alert("Failed to place order. Please try again.");
       }
     }
   };

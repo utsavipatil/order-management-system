@@ -107,13 +107,15 @@ const OrderForm = ({ onClose }) => {
           products: [
             {
               name: selectedProduct.name,
-              quantity: formData.quantity
+              quantity: formData.quantity,
+              price: selectedProduct.price
             }
           ],
           streetAddress: formData.address,
           city: formData.city,
           state: formData.state,
           zipcode: formData.zipCode,
+          totalAmount: total,
           specialInstructions: formData.specialInstructions || ""
         };
         

@@ -19,12 +19,14 @@ A modern, responsive Order Management System built with React. This application 
 ### Installation
 
 1. Clone the repository
+
    ```bash
    git clone [repository-url]
    cd oms-ui
    ```
 
 2. Install dependencies
+
    ```bash
    npm install
    # or
@@ -32,6 +34,7 @@ A modern, responsive Order Management System built with React. This application 
    ```
 
 3. Start the development server
+
    ```bash
    npm start
    # or

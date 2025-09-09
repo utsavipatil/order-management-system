@@ -39,8 +39,10 @@ export const orderApi = {
   placeOrder: (orderData) => {
     return apiClient.post('/order/place-order', orderData);
   },
+  getAllOrders: (page, size) => {
+    return apiClient.get(`/order/all-orders?page=${page}&size=${size}`);
+  },
   // Add other order-related API calls here as needed
-  // getOrders: () => apiClient.get('/order/list'),
   // getOrderById: (id) => apiClient.get(`/order/${id}`),
 };
 

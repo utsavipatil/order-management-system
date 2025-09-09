@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { ThemeProvider, CssBaseline, Container, AppBar, Toolbar, Typography, Box, Dialog } from '@mui/material';
+import { ThemeProvider, CssBaseline, Container, AppBar, Toolbar, Typography, Box, Dialog, Button } from '@mui/material';
 import theme from './theme';
 import OrderForm from './components/OrderForm/OrderForm';
 import Section1 from './components/Section1/Section1';
+import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
 
   const handleOrderNowClick = () => {
     setIsOrderFormOpen(true);
@@ -15,15 +17,32 @@ function App() {
     setIsOrderFormOpen(false);
   };
 
+  const handleDashboardClick = () => {
+    setIsDashboardOpen(true);
+  };
+  
+  const handleCloseDashboard = () => {
+    setIsDashboardOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" color="primary" elevation={0}>
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ display: 'inline', marginRight: 2 }}>
               Order Management System
             </Typography>
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              size="medium" 
+              onClick={handleDashboardClick}
+              sx={{ mr: 'auto' }}
+            >
+              Dashboard
+            </Button>
           </Toolbar>
         </AppBar>
       </Box>
@@ -49,6 +68,15 @@ function App() {
         fullWidth
       >
         <OrderForm onClose={handleCloseOrderForm} />
+      </Dialog>
+
+      <Dialog 
+        open={isDashboardOpen} 
+        onClose={handleCloseDashboard}
+        maxWidth="xl"
+        fullWidth
+      >
+        <Dashboard />
       </Dialog>
     </ThemeProvider>
   );

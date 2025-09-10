@@ -42,6 +42,9 @@ export const orderApi = {
   getAllOrders: (page, size) => {
     return apiClient.get(`/order/all-orders?page=${page}&size=${size}`);
   },
+  getOrderStatusHistory: (orderId) => {
+    return apiClient.get(`/order/${orderId}/status-history`);
+  },
   // Add other order-related API calls here as needed
   // getOrderById: (id) => apiClient.get(`/order/${id}`),
 };

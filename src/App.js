@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 function App() {
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isInventoryDashboardOpen, setIsInventoryDashboardOpen] = useState(false);
 
   const handleOrderNowClick = () => {
     setIsOrderFormOpen(true);
@@ -25,6 +26,14 @@ function App() {
     setIsDashboardOpen(false);
   };
 
+  const handleInventoryDashboardClick = () => {
+    setIsInventoryDashboardOpen(true);
+  };
+  
+  const handleCloseInventoryDashboard = () => {
+    setIsInventoryDashboardOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -39,9 +48,18 @@ function App() {
               color="secondary" 
               size="medium" 
               onClick={handleDashboardClick}
+              sx={{ mr: 2 }}
+            >
+              Order Management Dashboard
+            </Button>
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              size="medium" 
+              onClick={handleInventoryDashboardClick}
               sx={{ mr: 'auto' }}
             >
-              Dashboard
+              Inventory Management Dashboard
             </Button>
           </Toolbar>
         </AppBar>
@@ -77,6 +95,23 @@ function App() {
         fullWidth
       >
         <Dashboard />
+      </Dialog>
+
+      <Dialog 
+        open={isInventoryDashboardOpen} 
+        onClose={handleCloseInventoryDashboard}
+        maxWidth="xl"
+        fullWidth
+      >
+        {/* Placeholder for Inventory Dashboard component */}
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h4" component="h2" gutterBottom>
+            Inventory Management Dashboard
+          </Typography>
+          <Typography variant="body1">
+            Inventory management functionality will be implemented here.
+          </Typography>
+        </Box>
       </Dialog>
     </ThemeProvider>
   );

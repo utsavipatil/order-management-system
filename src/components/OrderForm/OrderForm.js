@@ -18,7 +18,7 @@
  */
 import React, { useState } from "react";
 import { orderApi } from "../../services/api";
-import { TextField, Grid, MenuItem, Typography } from "@mui/material";
+import { TextField, Grid, MenuItem, Typography, CircularProgress, Alert, Snackbar } from "@mui/material";
 import {
   FormContainer,
   FormHeader,
@@ -61,6 +61,12 @@ const OrderForm = ({ onClose }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({
+    open: false,
+    severity: "success",
+    message: ""
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,6 +101,7 @@ const OrderForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setLoading(true);
       try {
         // Get the selected product details
         const selectedProduct = products.find(p => p.id === Number(formData.productId));
@@ -124,15 +131,30 @@ const OrderForm = ({ onClose }) => {
         
         console.log("Order placed successfully:", response.data);
         
-        // Show success message and close the form
-        alert("Order placed successfully!");
-        if (onClose) {
-          onClose();
-        }
+        // First set loading to false, then show success message
+        setLoading(false);
+        
+        // Show success message with MUI Alert
+        setAlertInfo({
+          open: true,
+          severity: "success",
+          message: "Order placed successfully!"
+        });
+        
+        // Form will remain open until user explicitly closes it with X icon
       } catch (error) {
         console.error("Error placing order:", error);
-        alert("Failed to place order. Please try again.");
+        // First set loading to false, then show error message
+        setLoading(false);
+        
+        // Show error message with MUI Alert
+        setAlertInfo({
+          open: true,
+          severity: "error",
+          message: "Order failed to process. Please try again."
+        });
       }
+      // Remove the finally block since we're explicitly setting loading to false in both try and catch
     }
   };
 
@@ -150,9 +172,35 @@ const OrderForm = ({ onClose }) => {
       onClose();
     }
   };
+  
+  const handleAlertClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertInfo({
+      ...alertInfo,
+      open: false
+    });
+  };
 
   return (
     <FormContainer>
+      <Snackbar 
+        open={alertInfo.open} 
+        autoHideDuration={alertInfo.severity === "success" ? 4000 : 6000} 
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleAlertClose} 
+          severity={alertInfo.severity} 
+          variant="filled" 
+          sx={{ width: '100%' }}
+        >
+          {alertInfo.message}
+        </Alert>
+      </Snackbar>
+      
       <FormHeader>
         <FormTitle variant="h4">
           <ShoppingCart /> Place a New Order
@@ -387,8 +435,10 @@ const OrderForm = ({ onClose }) => {
                   variant="contained"
                   color="primary"
                   type="submit"
+                  disabled={loading}
+                  startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                  Place Order
+                  {loading ? 'Placing Order...' : 'Place Order'}
                 </SubmitButton>
 
                 <Typography

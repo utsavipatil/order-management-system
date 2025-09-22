@@ -34,6 +34,13 @@ const apiClient = axios.create({
   },
 });
 
+// Product API endpoints
+export const productApi = {
+  getProducts: (page, size) => {
+    return apiClient.get(`/products?page=${page}&size=${size}`);
+  },
+};
+
 // Order API endpoints
 export const orderApi = {
   placeOrder: (orderData) => {

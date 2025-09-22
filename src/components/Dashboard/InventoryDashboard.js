@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { productApi } from "../../services/api";
 import * as styles from "./InventoryDashboard-styles";
 import {
   Box,
@@ -16,7 +17,6 @@ import {
   Select,
   MenuItem,
   Grid,
-  IconButton,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -24,46 +24,19 @@ import {
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
   Error as ErrorIcon,
-  Edit as EditIcon,
-  Visibility as ViewIcon,
 } from "@mui/icons-material";
 
-// Sample data for demonstration - will be replaced with API data
-const sampleProducts = [
-  {
-    id: "WH-001",
-    name: "Wireless Headphones",
-    description: "Premium Audio Device",
-    category: "Electronics",
-    stockQty: 150,
-    reserved: 25,
-    available: 125,
-    status: "In Stock",
-  },
-  {
-    id: "SC-002",
-    name: "Smartphone Case",
-    description: "Protective Phone Cover",
-    category: "Electronics",
-    stockQty: 8,
-    reserved: 3,
-    available: 5,
-    status: "Low Stock",
-  },
-  {
-    id: "RS-003",
-    name: "Running Shoes",
-    description: "Athletic Footwear",
-    category: "Clothing",
-    stockQty: 0,
-    reserved: 0,
-    available: 0,
-    status: "Out of Stock",
-  },
-];
+const transformProductStatus = (status) => {
+  return status
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 const InventoryDashboard = () => {
-  const [products, setProducts] = useState(sampleProducts);
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -95,7 +68,7 @@ const InventoryDashboard = () => {
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.id.toLowerCase().includes(searchTerm.toLowerCase());
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       categoryFilter === "All Categories" ||
       product.category === categoryFilter;
@@ -105,10 +78,22 @@ const InventoryDashboard = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  // In a real application, you would fetch this data from an API
   useEffect(() => {
-    // API call would go here
-    // For now, we're using the sample data
+    const fetchProducts = async () => {
+      try {
+        const response = await productApi.getProducts(0, 10);
+        const transformedProducts = response.data.content.map((product) => ({
+          ...product,
+          status: transformProductStatus(product.status),
+        }));
+        setProducts(transformedProducts);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        // Optionally, set an error state here to show an error message in the UI
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   return (
@@ -118,10 +103,7 @@ const InventoryDashboard = () => {
         <Typography variant="h5" component="h1">
           Inventory Management System
         </Typography>
-        <Typography
-          variant="subtitle1"
-          sx={styles.headerSubtitleStyle}
-        >
+        <Typography variant="subtitle1" sx={styles.headerSubtitleStyle}>
           Warehouse Manager
         </Typography>
       </Box>
@@ -129,10 +111,7 @@ const InventoryDashboard = () => {
       {/* Statistics Cards */}
       <Grid container spacing={2} sx={styles.statsContainerStyle}>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={0}
-            sx={styles.statsPaperStyle}
-          >
+          <Paper elevation={0} sx={styles.statsPaperStyle}>
             <InventoryIcon sx={styles.totalProductsIconStyle} />
             <Box>
               <Typography variant="body2" color="text.secondary">
@@ -146,10 +125,7 @@ const InventoryDashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={0}
-            sx={styles.statsPaperStyle}
-          >
+          <Paper elevation={0} sx={styles.statsPaperStyle}>
             <CheckCircleIcon sx={styles.inStockIconStyle} />
             <Box>
               <Typography variant="body2" color="text.secondary">
@@ -163,10 +139,7 @@ const InventoryDashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={0}
-            sx={styles.statsPaperStyle}
-          >
+          <Paper elevation={0} sx={styles.statsPaperStyle}>
             <WarningIcon sx={styles.lowStockIconStyle} />
             <Box>
               <Typography variant="body2" color="text.secondary">
@@ -180,10 +153,7 @@ const InventoryDashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={0}
-            sx={styles.statsPaperStyle}
-          >
+          <Paper elevation={0} sx={styles.statsPaperStyle}>
             <ErrorIcon sx={styles.outOfStockIconStyle} />
             <Box>
               <Typography variant="body2" color="text.secondary">
@@ -247,9 +217,7 @@ const InventoryDashboard = () => {
           Product Catalog
         </Typography>
 
-        <Box
-          sx={styles.filterBoxStyle}
-        >
+        <Box sx={styles.filterBoxStyle}>
           <TextField
             placeholder="Search products..."
             variant="outlined"
@@ -316,11 +284,14 @@ const InventoryDashboard = () => {
             </TableHead>
             <TableBody>
               {filteredProducts.map((product) => (
-                <TableRow key={product.id}>
+                <TableRow key={product.productId}>
                   <TableCell>
                     <Box sx={styles.productNameCellStyle}>
                       <Box sx={styles.productNameTextBoxStyle}>
-                        <Typography variant="body2" sx={styles.productNameStyle}>
+                        <Typography
+                          variant="body2"
+                          sx={styles.productNameStyle}
+                        >
                           {product.name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -329,7 +300,7 @@ const InventoryDashboard = () => {
                       </Box>
                     </Box>
                   </TableCell>
-                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{product.sku}</TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>{product.stockQty}</TableCell>
                   <TableCell>{product.reserved}</TableCell>
@@ -339,40 +310,58 @@ const InventoryDashboard = () => {
                     {product.available}
                   </TableCell>
                   <TableCell>
-                    <Box
-                      sx={styles.getStatusChipStyle(product.status)}
-                    >
+                    <Box sx={styles.getStatusChipStyle(product.status)}>
                       {product.status}
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Box sx={styles.actionsCellStyle}>
-                      <IconButton size="small" color="primary">
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      {product.status === "Out of Stock" && (
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          color="primary"
-                          sx={styles.actionButtonStyle}
-                        >
-                          Restock
-                        </Button>
-                      )}
-                      {product.status === "In Stock" && (
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          color="primary"
-                          sx={styles.actionButtonStyle}
-                        >
-                          Reserve
-                        </Button>
-                      )}
-                      <IconButton size="small" color="primary" sx={styles.viewIconStyle}>
-                        <ViewIcon fontSize="small" />
-                      </IconButton>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <Button
+                        size="small"
+                        variant="text"
+                        color="primary"
+                        sx={{
+                          minWidth: "auto",
+                          padding: "4px 8px",
+                          color: "#1976d2",
+                        }}
+                      >
+                        Edit
+                      </Button>
+
+                      <Button
+                        size="small"
+                        variant="text"
+                        color="primary"
+                        sx={{
+                          minWidth: "auto",
+                          padding: "4px 8px",
+                          color: "#757575",
+                        }}
+                      >
+                        View
+                      </Button>
+
+                      <Button
+                        size="small"
+                        variant="text"
+                        color="primary"
+                        sx={{
+                          minWidth: "auto",
+                          padding: "4px 8px",
+                          color: product.status.includes("In Stock")
+                            ? "#4caf50"
+                            : product.status.includes("Low Stock")
+                            ? "#ff9800"
+                            : "#f44336",
+                        }}
+                      >
+                        {product.status.includes("In Stock")
+                          ? "Reserve"
+                          : product.status.includes("Low Stock")
+                          ? "Reorder"
+                          : "Restock"}
+                      </Button>
                     </Box>
                   </TableCell>
                 </TableRow>

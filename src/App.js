@@ -4,6 +4,7 @@ import theme from './theme';
 import OrderForm from './components/OrderForm/OrderForm';
 import Section1 from './components/Section1/Section1';
 import Dashboard from './components/Dashboard/Dashboard';
+import InventoryDashboard from './components/Dashboard/InventoryDashboard';
 
 function App() {
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
@@ -103,15 +104,7 @@ function App() {
         maxWidth="xl"
         fullWidth
       >
-        {/* Placeholder for Inventory Dashboard component */}
-        <Box sx={{ p: 3 }}>
-          <Typography variant="h4" component="h2" gutterBottom>
-            Inventory Management Dashboard
-          </Typography>
-          <Typography variant="body1">
-            Inventory management functionality will be implemented here.
-          </Typography>
-        </Box>
+        <InventoryDashboard />
       </Dialog>
     </ThemeProvider>
   );

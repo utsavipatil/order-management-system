@@ -5,6 +5,7 @@ A modern, responsive Order Management System built with React. This application 
 ## Features
 
 - **Order Management**: Create, view, and manage orders efficiently
+- **Inventory Management**: Track stock levels, manage products, and handle inventory transactions
 - **Responsive Design**: Works on desktop and tablet devices
 - **Modern UI**: Clean and intuitive user interface built with React
 - **Form Handling**: Robust order form with validation
@@ -21,7 +22,7 @@ A modern, responsive Order Management System built with React. This application 
 1. Clone the repository
    ```bash
    git clone [repository-url]
-   cd oms-ui
+   cd order-management-system
    ```
 
 2. Install dependencies
@@ -31,12 +32,25 @@ A modern, responsive Order Management System built with React. This application 
    yarn install
    ```
 
-3. Start the development server
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
+> **Important**: Always install all packages before running any commands.
+
+### Running the Application
+
+#### Development Mode
+
+```bash
+npm start
+# or
+yarn start
+```
+
+#### Local Environment
+
+```bash
+npm run start:local
+# or
+yarn start:local
+```
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
@@ -67,8 +81,10 @@ If you need to customize the build configuration, you can `eject` at any time. T
 ```
 src/
 ├── components/          # Reusable UI components
+│   ├── Dashboard/      # Dashboard components
 │   ├── OrderForm/      # Order creation and editing form
-│   └── Section1/        # Main section component
+│   └── Section1/       # Main section component
+├── services/           # API and service functions
 ├── pages/              # Page components
 └── App.js              # Main application component
 ```
